@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useAppSelector, useAppDispatch } from '@/redux/store'
 import { selectChannel, selectChannels, setChannelId } from '@/redux/channel'
 import { selectTeam } from '@/redux/team'
@@ -16,20 +16,31 @@ import ViewPrimary from '@/components/app/view/ViewPrimary'
 import ViewSecondary from '@/components/app/view/ViewSecondary'
 
 import { selectUserMapping } from '@/redux/user'
+import { Bot } from '@/types/chat'
+import { SecondaryView } from '@/constants/ui'
+import { selectBot, selectBots, setChatId } from '@/redux/chat'
 
 export default function ChannelPage() {
   const params = useParams()
+  const router = useRouter()
   const dispatch = useAppDispatch()
   const team = useAppSelector(selectTeam)
   const channel = useAppSelector(selectChannel)
   const channels = useAppSelector(selectChannels)
   const userMapping = useAppSelector(selectUserMapping)
+  const bot = useAppSelector(selectBot)
 
   const handleSelectChannel = (channel: Channel) => {
     const url = `/client/${params.team}/${channel.id}`
     history.pushState({}, '', url)
     dispatch(setChannelId(channel.id))
     dispatch(fetchMessages())
+  }
+
+  const handleSelectBot = (bot: Bot) => {
+    const url = `/client/${params.team}/${channel.id}/${SecondaryView.Chat}/${bot.id}`
+    dispatch(setChatId(bot.id))
+    router.push(url)
   }
 
   useEffect(() => {
@@ -50,12 +61,14 @@ export default function ChannelPage() {
       <div className="flex h-full">
         <AppSidebar
           className="w-[240px]"
+          botId={bot.id}
           channels={channels}
           channelId={channel.id}
+          onSelectBot={handleSelectBot}
           onSelectChannel={handleSelectChannel}
         />
         <ViewPrimary className="shrink-0 grow" channel={channel} />
-        <ViewSecondary className="min-w-[340px] shrink-0 grow-0" />
+        <ViewSecondary className="shrink-0 grow-0" />
       </div>
       <Toaster
         position="bottom-center"

@@ -16,7 +16,11 @@ const VirtualItem: NextComponentType<{}, {}, Props> = ({
 }) => {
   const callbackRef = useCallback(
     (element: HTMLDivElement) => {
-      if (element?.firstChild) setRowHeight(index, (element.firstChild as HTMLElement).offsetHeight)
+      requestAnimationFrame(
+        () =>
+          element?.firstChild &&
+          setRowHeight(index, (element.firstChild as HTMLElement).offsetHeight),
+      )
     },
     [index, setRowHeight],
   )

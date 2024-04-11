@@ -58,8 +58,13 @@ const MessageMessenger: NextComponentType<{}, {}, Props> = ({ className }) => {
 
   return (
     <div className={classnames(className, 'flex h-full flex-col')}>
-      <MessageList messages={messages} onLoadMore={loadMessages} className="flex-1" />
-      <MessageComposer className="mx-5 mb-1 shrink-0" onSend={handleSend} onChange={handleChange} />
+      <MessageList messages={messages} onLoadMore={loadMessages} className="min-h-[400px] flex-1" />
+      <MessageComposer
+        className="mx-5 mb-1 shrink-0"
+        placeholder="Message..."
+        onChange={handleChange}
+        onSend={handleSend}
+      />
     </div>
   )
 }

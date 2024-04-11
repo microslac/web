@@ -6,6 +6,7 @@ import { noop } from 'remeda'
 type Props = {
   className?: string
   isSelected?: boolean
+  isHighlight?: boolean
   label?: string
 
   prefix?: React.ReactNode
@@ -18,6 +19,7 @@ type Props = {
 const SidebarItem: NextComponentType<{}, {}, Props> = ({
   className,
   isSelected = false,
+  isHighlight = false,
   prefix,
   children,
   suffix,
@@ -34,6 +36,7 @@ const SidebarItem: NextComponentType<{}, {}, Props> = ({
       className={classnames(
         'ml-2 mr-2 flex h-7 cursor-pointer items-center rounded-md pl-2 pr-2 text-sl hover:bg-black/15',
         { 'bg-black/80 text-white hover:bg-black/80': isSelected },
+        { 'bg-black/30 text-white hover:bg-black/40': isHighlight },
         className,
       )}
       onClick={handleClick}

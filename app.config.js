@@ -10,11 +10,13 @@ if (!API_URL) {
   else API_URL = `${PROTOCOL}${API_HOST}/${API_ROOT}`
 }
 
+const CHAT_URL = process.env.CHAT_URL || ''
 const STORAGE_URL = process.env.STORAGE_URL || ''
 const STORAGE_HOST = STORAGE_URL.split('://').pop()
 
 module.exports = {
   API_URL: API_URL,
+  CHAT_URL: CHAT_URL,
   STORAGE_URL: STORAGE_URL,
   STORAGE_HOST: STORAGE_HOST,
 }

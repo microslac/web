@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { uiSlice } from '@/redux/ui'
 import { authSlice } from '@/redux/auth'
+import { chatSlice } from '@/redux/chat'
 import { teamSlice } from '@/redux/team'
 import { userSlice } from '@/redux/user'
 import { channelSlice } from '@/redux/channel'
@@ -13,6 +14,7 @@ const makeStore = () => {
     reducer: {
       [uiSlice.name]: uiSlice.reducer,
       [authSlice.name]: authSlice.reducer,
+      [chatSlice.name]: chatSlice.reducer,
       [teamSlice.name]: teamSlice.reducer,
       [userSlice.name]: userSlice.reducer,
       [channelSlice.name]: channelSlice.reducer,

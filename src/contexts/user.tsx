@@ -15,7 +15,6 @@ import { selectChannels } from '@/redux/channel'
 import { updatePresence, updateUser } from '@/redux/user'
 import { useSocket } from '@/hooks/socket/use-socket'
 import { getUser } from '@/redux/user/actions'
-import { noop } from 'remeda'
 
 type UserContextType = {
   sendSubscription: (userIds: string[]) => void

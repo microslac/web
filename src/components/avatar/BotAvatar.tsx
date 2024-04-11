@@ -3,32 +3,33 @@ import { AvatarSize, useAvatar } from '@/hooks/media/use-avatar'
 import { User } from '@/types/user'
 
 import Avatar from '@/components/avatar/Avatar'
+import { Bot } from '@/types/chat'
 
 type Props = {
-  user: User
-  size: number
+  bot: Bot
+  size?: number
   avatarSize?: AvatarSize
   presence?: boolean
 }
 
-const UserAvatar: NextComponentType<{}, {}, Props> = ({
-  user,
-  size,
+const BotAvatar: NextComponentType<{}, {}, Props> = ({
+  bot,
+  size = 24,
   presence = false,
   avatarSize = AvatarSize.MD,
 }) => {
-  const { getUserAvatar } = useAvatar()
-  const avatarSrc = getUserAvatar(user, avatarSize)
+  const { getBotAvatar } = useAvatar()
+  const avatarSrc = getBotAvatar(bot, avatarSize)
 
   return (
     <Avatar
       rounded
       size={size}
       src={avatarSrc}
-      alt={user?.name}
-      presence={presence ? user?.presence : undefined}
+      alt={bot?.name}
+      presence={presence ? 'active' : undefined}
     />
   )
 }
 
-export default UserAvatar
+export default BotAvatar

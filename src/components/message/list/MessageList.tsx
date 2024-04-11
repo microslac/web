@@ -22,8 +22,8 @@ const MessageList: NextComponentType<{}, {}, Props> = ({
   messages,
   onLoadMore = noop,
 }) => {
-  const virtualItems = useMemo<VirtualMessage[]>(() => {
-    const items: VirtualMessage[] = []
+  const virtualItems = useMemo<VirtualMessage<Message | Divider>[]>(() => {
+    const items: VirtualMessage<Message | Divider>[] = []
     let prevDivider: Divider | undefined = undefined
 
     for (const message of messages) {
@@ -46,12 +46,12 @@ const MessageList: NextComponentType<{}, {}, Props> = ({
     [onLoadMore],
   )
 
-  const itemKey = useCallback((index: number, data: VirtualMessage[]) => {
+  const itemKey = useCallback((index: number, data: VirtualMessage<Message | Divider>[]) => {
     return [data[index].type, data[index].data.ts].join('-')
   }, [])
 
   return (
-    <div className={classnames(className, 'flex-1 overflow-y-hidden pb-2')}>
+    <div className={classnames(className, 'overflow-y-hidden pb-2')}>
       <VirtualList
         className="pt-4"
         itemCount={virtualItems.length}
@@ -62,8 +62,8 @@ const MessageList: NextComponentType<{}, {}, Props> = ({
       >
         {({ index }) => {
           const item = virtualItems[virtualItems.length - 1 - index]
-          if (item.type == 'divider') return <MessageDivider divider={item.data} />
-          else if (item.type === 'message') return <MessageItem message={item.data} />
+          if (item.type == 'divider') return <MessageDivider divider={item.data as Divider} />
+          else if (item.type === 'message') return <MessageItem message={item.data as Message} />
         }}
       </VirtualList>
     </div>

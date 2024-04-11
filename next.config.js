@@ -5,6 +5,7 @@ const nextConfig = {
   reactStrictMode: false,
   env: {
     API_URL: appConfig.API_URL,
+    CHAT_URL: appConfig.CHAT_URL,
     STORAGE_URL: appConfig.STORAGE_URL,
     STORAGE_HOST: appConfig.STORAGE_HOST,
     SOCKET_URL: process.env.SOCKET_URL,
