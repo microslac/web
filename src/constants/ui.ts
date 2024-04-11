@@ -14,4 +14,6 @@ export enum SecondaryView {
   Docs = 'docs',
   Profile = 'profile',
   Thread = 'thread',
+  Chat = 'chat',
+  Bot = 'bot',
 }

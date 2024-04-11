@@ -6,12 +6,13 @@ import classnames from 'classnames'
 import { useAppSelector } from '@/redux/store'
 import { lookupUser } from '@/redux/user'
 import { selectView } from '@/redux/ui'
+import { lookupBot } from '@/redux/chat'
 import { useAppParams } from '@/hooks/app/use-app-params'
-import { useAppCookies } from '@/hooks/app/use-app-cookies'
 import { SecondaryView } from '@/constants/ui'
 
-import ViewHeader from './ViewHeader'
-import UserProfile from '@/components/user/profile/UserProfile'
+import ViewSecondaryProfile from '@/components/app/view/secondary/ViewSecondaryProfile'
+import ViewSecondaryChat from '@/components/app/view/secondary/ViewSecondaryChat'
+import ViewSecondaryBot from '@/components/app/view/secondary/ViewSecondaryBot'
 
 type Props = {
   className?: string
@@ -22,52 +23,35 @@ const ViewSecondary: NextComponentType<{}, {}, Props> = ({ className }) => {
   const params = useAppParams()
   const view = useAppSelector(selectView)
   const user = useAppSelector(lookupUser(params.secondary))
-  const { deleteAllCookies } = useAppCookies()
+  const bot = useAppSelector(lookupBot(params.secondary))
 
   const isProfile = params.group === SecondaryView.Profile
+  const isChat = params.group === SecondaryView.Chat
+  const isBot = params.group === SecondaryView.Bot
 
-  const closeView = useCallback(() => {
+  const close = useCallback(() => {
     router.push(`/client/${params.team}/${params.channel}`)
   }, [router, params])
 
-  const logout = useCallback(() => {
-    deleteAllCookies()
-    router.push('/signin')
-  }, [router, deleteAllCookies])
-
   useEffect(() => {
-    if (isProfile && params.secondary && !user.id) closeView()
-  }, [user, isProfile, params, closeView])
+    if (isProfile && params.secondary && !user.id) close()
+    if (isChat && params.secondary && !bot.id) close()
+    if (isBot && params.secondary && !bot.id) close()
+  }, [user, bot, isBot, isChat, isProfile, params, close])
 
   if (!view.secondary) return null
 
-  const closeBtn = (
-    <>
-      <button
-        type="button"
-        className="mr-2 flex h-6 items-center justify-center rounded bg-black/10 p-1 hover:bg-black/20"
-        onClick={logout}
-      >
-        logout
-      </button>
-      <button
-        type="button"
-        className="flex h-6 items-center justify-center rounded bg-black/10 p-1 hover:bg-black/20"
-        onClick={closeView}
-      >
-        close
-      </button>
-    </>
-  )
-
   return (
-    <div className={classnames(className, 'border-l border-black/20')}>
-      <ViewHeader className="shrink-0" actions={closeBtn}>
-        <div className="flex w-full items-center justify-between">
-          <span>Profile</span>
-        </div>
-      </ViewHeader>
-      {isProfile && user.id && <UserProfile user={user} />}
+    <div
+      className={classnames(className, 'border-l border-black/20', {
+        'min-w-[340px]': isProfile,
+        'min-w-[480px]': isChat,
+        'max-w-[340px]': isBot,
+      })}
+    >
+      {isProfile && <ViewSecondaryProfile close={close} user={user} />}
+      {isChat && <ViewSecondaryChat close={close} bot={bot} />}
+      {isBot && <ViewSecondaryBot close={close} bot={bot} />}
     </div>
   )
 }

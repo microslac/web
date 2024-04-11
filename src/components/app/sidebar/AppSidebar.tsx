@@ -12,12 +12,16 @@ import { selectUserMapping } from '@/redux/user'
 import SidebarTop from './SidebarTop'
 import SidebarItem from './SidebarItem'
 import Avatar from '@/components/avatar/Avatar'
+import BotAvatar from '@/components/avatar/BotAvatar'
 import { useAvatar } from '@/hooks/media/use-avatar'
+import { selectBots } from '@/redux/chat'
+import { Bot } from '@/types/chat'
 
 type Props = {
   className?: string
   channelId: string
   channels: Channel[]
+  onSelectBot?: (bot: Bot) => void
   onSelectChannel?: (channel: Channel) => void
 }
 
@@ -25,8 +29,10 @@ const AppSidebar: NextComponentType<{}, {}, Props> = ({
   className,
   channelId,
   channels,
+  onSelectBot = noop,
   onSelectChannel = noop,
 }) => {
+  const bots = useAppSelector(selectBots)
   const users = useAppSelector(selectUserMapping)
   const [selectedId, setSelectedId] = useState<string>(() => channelId)
 
@@ -53,11 +59,15 @@ const AppSidebar: NextComponentType<{}, {}, Props> = ({
     onSelectChannel(channel)
   }
 
+  const handleClickBot = (bot: Bot) => {
+    onSelectBot(bot)
+  }
+
   useEffect(() => {
     if (channelId) setSelectedId(channelId)
   }, [channelId])
 
-  const { lookupUserAvatar } = useAvatar()
+  const { getUserAvatar } = useAvatar()
 
   return (
     <div
@@ -100,7 +110,7 @@ const AppSidebar: NextComponentType<{}, {}, Props> = ({
             prefix={
               <Avatar
                 size={20}
-                src={lookupUserAvatar(channel.user)}
+                src={getUserAvatar(users[channel.user])}
                 presence={users[channel.user!]?.presence}
               />
             }
@@ -121,6 +131,17 @@ const AppSidebar: NextComponentType<{}, {}, Props> = ({
             prefix={<Avatar src="/avatar/default.png" />}
           >
             <span>{(channel.users || []).map((uid) => users[uid]?.name).join(', ')}</span>
+          </SidebarItem>
+        ))}
+
+        {Object.values(bots).map((bot) => (
+          <SidebarItem
+            key={bot.id}
+            isSelected={bot.id === selectedId}
+            onClick={() => handleClickBot(bot)}
+            prefix={<BotAvatar bot={bot} />}
+          >
+            <span>{bot.name}</span>
           </SidebarItem>
         ))}
       </div>

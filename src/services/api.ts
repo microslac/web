@@ -16,9 +16,10 @@ export const baseApi = ky.create({
 
 export default api
 
-export const setupApi = (token?: string) => {
+export const setupApi = (token?: string, prefixUrl?: string) => {
   token = token || getCookie(process.env.COOKIE_ACCESS_TOKEN as string)
   return api.extend({
+    prefixUrl: prefixUrl || process.env.API_URL,
     hooks: {
       beforeRequest: [
         (request) => {

@@ -9,12 +9,14 @@ type Props = {
   className?: string
   onSend: (content: string) => void
   onChange?: (context: string) => void
+  placeholder?: string
 }
 
 const MessageComposer: NextComponentType<{}, {}, Props> = ({
   className,
   onSend,
   onChange = noop,
+  placeholder,
 }) => {
   const [content, setContent] = useState<string>('')
 
@@ -62,7 +64,7 @@ const MessageComposer: NextComponentType<{}, {}, Props> = ({
         </div>
         <textarea
           className="min-h-9 flex w-full resize-none items-center px-3 py-2 text-sl text-black/90 focus:outline-0"
-          placeholder="Message #general"
+          placeholder={placeholder}
           rows={1}
           value={content}
           onKeyDown={handleKeydown}

@@ -22,9 +22,9 @@ const UserAvatar: NextComponentType<{}, {}, Props> = ({
 
   return (
     <Avatar
-      src={avatarSrc}
       rounded
       size={size}
+      src={avatarSrc}
       alt={user?.name}
       presence={presence ? user?.presence : undefined}
     />

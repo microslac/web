@@ -11,6 +11,7 @@ import { conversationView } from '@/redux/conversation/actions'
 import { SocketProvider } from '@/contexts/socket'
 import { UserProvider } from '@/contexts/user'
 import { useAppParams } from '@/hooks/app/use-app-params'
+import { listBots } from '@/redux/chat/actions'
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -59,6 +60,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       .then(() => dispatchAuthObtain(teamId))
       .then(() => dispatch(clientBoot(teamId)))
       .then(() => dispatchConversationView(teamId, channelId))
+      .then(() => dispatch(listBots(teamId)))
       .then(() => setFetched(true))
       .catch((error) => router.replace('/signin/teams'))
   }, [fetched, params, router, dispatch, dispatchAuthObtain, dispatchConversationView])

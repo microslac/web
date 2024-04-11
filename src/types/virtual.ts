@@ -1,4 +1,3 @@
-import { Message } from '@/types/message'
 import dayjs, { Dayjs } from 'dayjs'
 
 export class Divider {
@@ -20,4 +19,4 @@ export class Divider {
   }
 }
 
-export type VirtualMessage = { type: 'message'; data: Message } | { type: 'divider'; data: Divider }
+export type VirtualMessage<T> = { type: string; data: T }

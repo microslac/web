@@ -72,7 +72,7 @@ const VirtualList: NextComponentType<{}, {}, Props> = ({
   }, [trackId])
 
   // TODO: set this value to 2
-  const STATIC_OVER_SCAN_COUNT = 28
+  const STATIC_OVER_SCAN_COUNT = 14
 
   return (
     <AutoSizer className={classnames(className)}>
@@ -88,6 +88,7 @@ const VirtualList: NextComponentType<{}, {}, Props> = ({
           itemKey={itemKey}
           itemData={itemData}
           overscanCount={STATIC_OVER_SCAN_COUNT}
+          className="virtual-list"
         >
           {({ style, index }) => (
             <VirtualItem index={index} style={style} setRowHeight={setRowHeight}>

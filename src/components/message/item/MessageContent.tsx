@@ -14,16 +14,6 @@ type Props = {
   message: Message
 }
 
-const MessageContent: NextComponentType<{}, {}, Props> = ({ className, message }) => {
-  const mentionText = reactStringReplace(message.text, CommonRegex.UserMention, (match, index) => (
-    <UserMention uid={match} key={index} />
-  ))
-
-  return <div className={classnames(className, 'w-full text-black/90')}>{mentionText}</div>
-}
-
-export default MessageContent
-
 const UserMention: NextComponentType<{}, {}, { uid: string }> = ({ uid }) => {
   const router = useRouter()
   const user = useAppSelector(lookupUser(uid))
@@ -45,3 +35,13 @@ const UserMention: NextComponentType<{}, {}, { uid: string }> = ({ uid }) => {
     </a>
   )
 }
+
+const MessageContent: NextComponentType<{}, {}, Props> = ({ className, message }) => {
+  const mentionText = reactStringReplace(message.text, CommonRegex.UserMention, (match, index) => (
+    <UserMention uid={match} key={index} />
+  ))
+
+  return <div className={classnames(className, 'w-full text-black/90')}>{mentionText}</div>
+}
+
+export default MessageContent
