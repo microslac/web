@@ -1,17 +1,21 @@
 'use client'
 
 import { NextComponentType } from 'next'
-import classnames from 'classnames'
 import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/dist/client/components/navigation'
 import { useForm } from 'react-hook-form'
-import { useCookie } from 'react-use'
-import { Button } from '@nextui-org/react'
+import classnames from 'classnames'
 import { noop } from 'remeda'
 
 import { useAppDispatch } from '@/redux/store'
-import { authLogin, authSignup } from '@/redux/auth/actions'
-import { RegEx } from '@/constants/validation'
 import { useAppCookies } from '@/hooks/app/use-app-cookies'
+import { authConsume, authLogin, authSignup, socialSignin } from '@/redux/auth/actions'
+
+import { RegEx } from '@/constants/validation'
+import { Button } from '@nextui-org/react'
+import { FcGoogle } from 'react-icons/fc'
+import { FaGithub, FaLinkedin } from 'react-icons/fa'
 
 type Props = {
   className?: string
@@ -29,8 +33,12 @@ const SigninForm: NextComponentType<{}, {}, Props> = ({
   isSignup = false,
   onLogin = noop,
 }) => {
-  const { updateAuthCookie } = useAppCookies()
+  const query = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const dispatch = useAppDispatch()
+  const { updateAuthCookie } = useAppCookies()
+
   const [errorCode, setErrorCode] = useState<string>('')
   const errorMessages: Record<string, string> = {
     invalid_credentials: 'Invalid credentials. Please try again.',
@@ -40,7 +48,6 @@ const SigninForm: NextComponentType<{}, {}, Props> = ({
     register,
     handleSubmit,
     formState: { errors, isValid, isSubmitted },
-
     watch,
   } = useForm<FormValues>({
     defaultValues: {
@@ -67,6 +74,34 @@ const SigninForm: NextComponentType<{}, {}, Props> = ({
     }
   }
 
+  const handleSocialSignin = async (source: string) => {
+    const payload = { source }
+    const data = await dispatch(socialSignin(payload)).unwrap()
+    if (data.ok) router.push(data.authorization_url)
+  }
+
+  useEffect(() => {
+    const refresh = query.get('_r')
+
+    if (refresh) {
+      const params = new URLSearchParams(query.toString())
+      params.delete('_r') // TODO: query
+      router.replace(pathname)
+
+      const payload = { refresh: atob(refresh) }
+      dispatch(authConsume(payload))
+        .unwrap()
+        .then((data) => {
+          if (data.ok) {
+            const oneMonth = 30 * 24 * 60 * 60 * 1000
+            const expires = new Date(Date.now() + oneMonth)
+            updateAuthCookie(data.access, { expires })
+            onLogin()
+          }
+        })
+    }
+  }, [dispatch, query, router, pathname, updateAuthCookie, onLogin])
+
   useEffect(() => {
     const sub = watch(() => setErrorCode(''))
     return () => sub.unsubscribe()
@@ -78,15 +113,28 @@ const SigninForm: NextComponentType<{}, {}, Props> = ({
         variant="bordered"
         color="primary"
         className="h-11 border-default-400 text-lg font-medium"
+        onPress={() => handleSocialSignin('google')}
       >
-        Sign In With Google
+        <FcGoogle />
+        <span>Sign In With Google</span>
       </Button>
       <Button
         variant="bordered"
         color="primary"
         className="h-11 border-default-400 text-lg font-medium"
+        onPress={() => handleSocialSignin('github')}
       >
-        Sign In With Apple
+        <FaGithub />
+        Sign In With Github
+      </Button>
+      <Button
+        variant="bordered"
+        color="primary"
+        className="h-11 border-default-400 text-lg font-medium"
+        onPress={() => handleSocialSignin('linkedin')}
+      >
+        <FaLinkedin />
+        Sign In With Linkedin
       </Button>
       <div className="flex items-center">
         <hr className="flex-1" />

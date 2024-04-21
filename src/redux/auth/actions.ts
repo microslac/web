@@ -53,3 +53,40 @@ export const authObtain = createAsyncThunk(
     })
   },
 )
+
+export type ConsumePayload = {
+  refresh: string
+}
+
+export type ConsumeResponse = {
+  ok: boolean
+  access: string
+}
+
+export const authConsume = createAsyncThunk(
+  'auth/consume',
+  async (payload: ConsumePayload, thunkAPI) => {
+    return thunkRequest(thunkAPI, async () => {
+      const resp = await api.post('auth/consume', { json: payload })
+      return await resp.json<ConsumeResponse>()
+    })
+  },
+)
+
+export type GoogleSigninPayload = {
+  source: string
+}
+
+export type GoogleSigninResponse = {
+  ok: boolean
+  authorization_url: string
+}
+
+export const socialSignin = createAsyncThunk(
+  'oauth2/social',
+  async (payload: GoogleSigninPayload, thunkAPI) => {
+    const { source } = payload
+    const resp = await api.get(`oauth2/${source}/authorize`, {})
+    return await resp.json<GoogleSigninResponse>()
+  },
+)
