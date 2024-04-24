@@ -46,7 +46,7 @@ const ViewSecondary: NextComponentType<{}, {}, Props> = ({ className }) => {
       className={classnames(className, 'border-l border-black/20', {
         'min-w-[340px]': isProfile,
         'min-w-[480px]': isChat,
-        'max-w-[340px]': isBot,
+        'max-w-[320px]': isBot,
       })}
     >
       {isProfile && <ViewSecondaryProfile close={close} user={user} />}

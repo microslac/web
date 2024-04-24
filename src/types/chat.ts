@@ -39,6 +39,9 @@ export type Stream = {
 export type Bot = {
   id: string
   name: string
+  type: string
+  model: string
+  status: string
   created: number
   updated?: number
   avatar_hash: string

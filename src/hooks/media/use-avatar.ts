@@ -6,7 +6,10 @@ export { AvatarSize }
 
 export const useAvatar = () => {
   const getBotAvatar = (bot: Bot, size: AvatarSize = AvatarSize.XS): string => {
-    if (!bot.avatar_hash) return '/avatar/bot.png'
+    const name = bot.name.toLowerCase()
+    const statics = ['meta', 'flink', 'sophia']
+    if (statics.includes(name)) return `/avatar/${name}.jpg`
+    if (!bot.avatar_hash) return '/avatar/default.png'
     return ''
   }
 

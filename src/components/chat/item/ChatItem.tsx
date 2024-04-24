@@ -52,7 +52,10 @@ const ChatItem: NextComponentType<{}, {}, Props> = ({ className, chat, onClick =
         {isUser && <UserAvatar user={user} size={36} />}
       </div>
       <div className="-my-4 w-full py-2 pr-2">
-        <ChatMeta chat={chat} name={isBot ? bot.name : user.name} />
+        <ChatMeta
+          chat={chat}
+          name={isBot ? bot.name : user.profile.display_name || user.profile.real_name || user.name}
+        />
         <ChatContent chat={chat} />
       </div>
     </div>

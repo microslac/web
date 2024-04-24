@@ -1,6 +1,8 @@
 import { NextComponentType } from 'next'
-import { Chat } from '@/types/chat'
 import classnames from 'classnames'
+import Markdown from 'react-markdown'
+
+import { Chat } from '@/types/chat'
 
 type Props = {
   className?: string
@@ -8,7 +10,7 @@ type Props = {
 }
 
 const ChatContent: NextComponentType<{}, {}, Props> = ({ className, chat }) => {
-  return <div className={classnames(className, 'w-full text-black/90')}>{chat.text}</div>
+  return <Markdown className={classnames(className, 'w-full text-black/90')}>{chat.text}</Markdown>
 }
 
 export default ChatContent

@@ -12,8 +12,14 @@ const BotProfile: NextComponentType<{}, {}, Props> = ({ bot }) => {
     <div>
       <BotMain bot={bot} />
       <div className="border-t p-4">
-        <div className="mb-4 font-bold">Instruction</div>
-        <span className="text-black/50">{bot.instruction}</span>
+        <div className="mb-2 font-bold">Model</div>
+        <span className="text-black/50">{bot.model}</span>
+        {bot.instruction && (
+          <>
+            <div className="mb-2 mt-4 font-bold">Instruction</div>
+            <span className="text-black/50">{bot.instruction}</span>
+          </>
+        )}
       </div>
     </div>
   )

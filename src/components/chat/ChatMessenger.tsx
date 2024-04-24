@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { NextComponentType } from 'next'
 import throttle from 'lodash/throttle'
-import random from 'lodash/random'
 import classnames from 'classnames'
 import { RemoteRunnable } from '@langchain/core/runnables/remote'
 
@@ -16,6 +15,7 @@ import { timer } from '@/utils'
 
 import ChatList from '@/components/chat/list/ChatList'
 import ChatComposer from '@/components/chat/composer/ChatComposer'
+import { useAppCookies } from '@/hooks/app/use-app-cookies'
 
 type Props = {
   className?: string
@@ -23,11 +23,11 @@ type Props = {
 }
 
 const ChatMessenger: NextComponentType<{}, {}, Props> = ({ className, bot }) => {
-  const [isStreaming, setIsStreaming] = useState<boolean>(false)
   const messengerRef = useRef<HTMLDivElement>(null)
   const virtualListRef = useRef<HTMLDivElement | null>(null)
 
-  const remoteChain = useMemo(() => new RemoteRunnable({ url: `${process.env.CHAT_URL}/chat` }), [])
+  const { accessCookie } = useAppCookies()
+  const [isStreaming, setIsStreaming] = useState<boolean>(false)
 
   const dispatch = useAppDispatch()
   const chats = useAppSelector(selectChats)
@@ -57,9 +57,17 @@ const ChatMessenger: NextComponentType<{}, {}, Props> = ({ className, bot }) => 
       dispatch(addChat(streaming))
 
       setIsStreaming(true)
-      await timer(1000 + random(-400, 100))
 
-      const stream = await remoteChain.stream(
+      const mapping: Record<string, string> = { phi: 'phi' }
+      const endpoint = mapping[bot.type] || 'chat'
+      const chain = new RemoteRunnable({
+        url: `${process.env.CHAT_URL}/${endpoint}`,
+        options: {
+          headers: { Authorization: `Token ${accessCookie}` },
+        },
+      })
+
+      const stream = await chain.stream(
         { input: msg.text },
         { configurable: { bot: msg.bot, user: msg.user } },
       )
@@ -71,7 +79,7 @@ const ChatMessenger: NextComponentType<{}, {}, Props> = ({ className, bot }) => 
 
       setIsStreaming(false)
     },
-    [bot, dispatch, prepareMsg, remoteChain, scrollToBottom],
+    [bot, dispatch, prepareMsg, scrollToBottom],
   )
 
   const loadChats = () => {
