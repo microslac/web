@@ -2,6 +2,7 @@
 const appConfig = require('./app.config')
 
 const nextConfig = {
+  // output: 'standalone',
   reactStrictMode: false,
   env: {
     API_URL: appConfig.API_URL,

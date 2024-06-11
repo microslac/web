@@ -1,0 +1,12 @@
+version: "3"
+
+tasks:
+  build:
+    cmds:
+      - cmd: docker build -t microslac.io/web -f docker/Dockerfile .
+  run:
+    cmds:
+      - cmd: docker run --rm -it -p 3000:3000 microslac.io/web
+  push:
+    cmds:
+      - cmd: docker push microslac.io/web

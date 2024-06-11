@@ -1,14 +1,14 @@
 import { NextComponentType } from 'next'
 import classnames from 'classnames'
 
-import { ProfileSection } from '@/types/user/profile'
+import { ProfileSection as IProfileSection } from '@/types/user/profile'
 
 import ProfileField from './ProfileField'
 
 type Props = {
   className?: string
   children?: React.ReactNode
-  section: ProfileSection
+  section: IProfileSection
 }
 
 const ProfileSection: NextComponentType<{}, {}, Props> = ({ className, children, section }) => {
