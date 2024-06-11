@@ -133,7 +133,7 @@ const SigninForm: NextComponentType<{}, {}, Props> = ({
         className="h-11 border-default-400 text-lg font-medium"
         onPress={() => handleSocialSignin('linkedin')}
       >
-        <FaLinkedin />
+        <FaLinkedin style={{ color: '#007AB5' }} />
         Sign In With Linkedin
       </Button>
       <div className="flex items-center">

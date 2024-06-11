@@ -1,4 +1,6 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'Signup - Slac',
@@ -9,7 +11,19 @@ export default function SignupLayout({ children }: { children: React.ReactNode }
     <div className="flex h-full w-full flex-col overflow-x-hidden">
       <div className="flex items-center pb-10 pt-12">
         <div className="w-full flex-1 pl-10" />
-        <div className="flex-1 text-center text-3xl font-black">Slac</div>
+        <Link
+          href="/"
+          className="flex flex-1 items-center justify-center text-center text-4xl font-black"
+        >
+          <Image
+            src="logo.svg"
+            width={32}
+            height={32}
+            alt="logo"
+            className="-ml-6 mr-2 opacity-40"
+          />
+          <span>Slac</span>
+        </Link>
         <div className="flex flex-1 flex-col pr-10 text-right" />
       </div>
       {children}
